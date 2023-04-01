@@ -15,9 +15,14 @@ class _AddDetailsState extends State<AddDetails> {
   final _box = Hive.box('EXPENSETRACKER');
   Database db = Database();
   //Category List
-  var category = ['Food', 'Groceries', 'Utilities', 'Others'];
+  var category = ['Food', 'Groceries', 'Utilities','Travel','Loan Repayment','Medicines','Others'];
   var categoryValue = 'Food';
 
+
+  //Mode of Payment List
+  var modeOfPayment = ['Cash', 'Card', 'UPI','Net Banking'];
+  var modeOfPaymentValue = 'Cash';
+  
   //Date
   DateTime date = DateTime.now();
   var year = DateTime.now().year;
@@ -32,15 +37,18 @@ class _AddDetailsState extends State<AddDetails> {
     var selectedDate = '$day-$month-$year';
     // print(date);
     return Scaffold(
+      backgroundColor: Colors.deepPurple[100],
       appBar: AppBar(
-        title: Text('Add Expense'),
+        title: Text('Add Expenses'),
+        backgroundColor: Colors.deepPurple[400],
+        shadowColor: Colors.deepPurple[300],
       ),
       body: SingleChildScrollView(
         scrollDirection: Axis.vertical,
         child: Column(
+          
           children: [
             //Calendar
-
             CalendarDatePicker(
                 initialDate: DateTime.now(),
                 firstDate: DateTime(2023),
@@ -59,24 +67,51 @@ class _AddDetailsState extends State<AddDetails> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Category'),
-                const SizedBox(
-                  width: 25,
+                Column(
+                  children: [
+                    
+                    const Text('Category',style: TextStyle(color: Colors.black, fontSize: 20)),
+                    DropdownButton(
+                      value: categoryValue,
+                      items: category.map((String category) {
+                        return DropdownMenuItem(
+                          value: category,
+                          child: Text(category),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          categoryValue = value!;
+                          // print(categoryValue);
+                        });
+                      },
+                    ),
+                  ],
                 ),
-                DropdownButton(
-                  value: categoryValue,
-                  items: category.map((String category) {
-                    return DropdownMenuItem(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      categoryValue = value!;
-                      // print(categoryValue);
-                    });
-                  },
+
+                const VerticalDivider(),
+
+                //DropDown for Mode of Payment
+                Column(
+                  children: [
+                    const Text('Mode of Payment',
+                        style: TextStyle(color: Colors.black, fontSize: 20)
+                    ),
+                    DropdownButton(
+                      value: modeOfPaymentValue,
+                      items: modeOfPayment.map((String modeOfPayment) {
+                        return DropdownMenuItem(
+                          value: modeOfPayment,
+                          child: Text(modeOfPayment),
+                        );
+                      }).toList(),
+                      onChanged: (value) {
+                        setState(() {
+                          modeOfPaymentValue = value!;
+                        });
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -90,6 +125,7 @@ class _AddDetailsState extends State<AddDetails> {
                   border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(15)),
                   hintText: 'Enter Amount',
+                  
                 ),
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
@@ -102,6 +138,7 @@ class _AddDetailsState extends State<AddDetails> {
                     amount = value;
                   });
                 },
+                
               ),
             ),
 
@@ -114,12 +151,22 @@ class _AddDetailsState extends State<AddDetails> {
                     'category': categoryValue,
                     'date': selectedDate.toString(),
                     'amount': amount,
+                    'modeOfPayment':modeOfPaymentValue,
                   });
                   });
-                  print(db.getExpense());
+                  // print(db.getExpense());
                   Navigator.pop(context);
                 },
-                child: Text('Add Expense')),
+                child: Text('Add Expense'),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.deepPurple[400],
+                  onPrimary: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                )
+            ),
+                
           ],
         ),
       ),

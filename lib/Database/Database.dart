@@ -6,20 +6,22 @@ class Database {
   final _box=Hive.box('EXPENSETRACKER');
   List expense = [];
   //add to database
-  void addExpense(String category, String date, String amount) {
+  void addExpense(String category, String date, String amount,String modeOfPayment) {
     _box.add({
       'category': category,
       'date': date,
       'amount': amount,
+      'modeOfPayment':modeOfPayment
     });
   }
 
   //update database
-  void updateExpense(int index, String category, String date, String amount) {
+  void updateExpense(int index, String category, String date, String amount,String modeOfPayment) {
     _box.putAt(index, {
       'category': category,
       'date': date,
       'amount': amount,
+      'modeOfPayment':modeOfPayment
     });
   }
 

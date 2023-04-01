@@ -27,11 +27,12 @@ class _HomeState extends State<Home> {
         .toList()
         .where((expense) => expense['date'] == selectedDate)
         .toList();
+    
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.cyan[200],
-        foregroundColor: Colors.red[900],
-        title: const Text('Home Page'),
+        title: const Text('Expense Tracker'),
+        shadowColor: Colors.deepPurple[300],
+        backgroundColor: Colors.deepPurple[400],
         actions: [
           IconButton(
               onPressed: () {
@@ -45,6 +46,9 @@ class _HomeState extends State<Home> {
 
       //display all expenses from database
       body: Container(
+        decoration: BoxDecoration(
+          color: Colors.deepPurple[100],
+        ),
         child: Column(
           children: [
             CalendarDatePicker(
@@ -63,6 +67,7 @@ class _HomeState extends State<Home> {
             Expanded(
               // ignore: deprecated_member_use
               child: WatchBoxBuilder(
+                
                 box: _box,
                 builder: (context, box) {
                   List<dynamic> expenses = box.values
@@ -71,7 +76,6 @@ class _HomeState extends State<Home> {
                       .toList();
                   return ListView.builder(
                     itemBuilder: (context, index) {
-                      print(_box.length);
                       return Slidable(
                         endActionPane: ActionPane(
                           motion: const ScrollMotion(),
@@ -80,17 +84,42 @@ class _HomeState extends State<Home> {
                                 onPressed: () {
                                   setState(() {
                                     db.deleteExpense(index);
-                                    print(_box.length);
                                   });
                                 },
                                 icon: Icon(Icons.delete)),
                           ],
                         ),
-                        child: Card(
-                          child: ListTile(
-                            title: Text(expenses[index]['category']),
-                            subtitle: Text(expenses[index]['date']),
-                            trailing: Text(expenses[index]['amount']),
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
+                          child: Card(
+                            color: Colors.yellow[100],
+                            child: ListTile(
+                              title: Text(expenses[index]['category'],
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                      color: Colors.deepPurple,
+                                      fontWeight: FontWeight.bold
+                                      )
+                                    ),
+                              subtitle: Row(
+                                children: [
+                                  Text(expenses[index]['modeOfPayment'],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                          color: Colors.red[400],
+                                          fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                ],
+                              ),
+                              trailing: Text(expenses[index]['amount'],
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black
+                                ),
+                              ),
+                            ),
                           ),
                         ),
                       );
