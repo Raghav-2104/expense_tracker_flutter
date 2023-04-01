@@ -20,10 +20,13 @@ class _HomeState extends State<Home> {
   var year = '';
   var month = '';
   var day = '';
-  
+
   @override
   Widget build(BuildContext context) {
-    List<dynamic> expenses = _box.values.toList().where((expense) => expense['date'] == selectedDate).toList();
+    List<dynamic> expenses = _box.values
+        .toList()
+        .where((expense) => expense['date'] == selectedDate)
+        .toList();
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.cyan[200],
@@ -58,13 +61,16 @@ class _HomeState extends State<Home> {
                   print(selectedDate);
                 }),
             Expanded(
-              child: ValueListenableBuilder(
-                valueListenable: _box.listenable(),
-                builder: (context, value, _) {
+              // ignore: deprecated_member_use
+              child: WatchBoxBuilder(
+                box: _box,
+                builder: (context, box) {
+                  List<dynamic> expenses = box.values
+                      .toList()
+                      .where((expense) => expense['date'] == selectedDate)
+                      .toList();
                   return ListView.builder(
                     itemBuilder: (context, index) {
-                      
-                      
                       print(_box.length);
                       return Slidable(
                         endActionPane: ActionPane(
@@ -89,7 +95,6 @@ class _HomeState extends State<Home> {
                         ),
                       );
                     },
-                    // itemCount: _box.length,
                     itemCount: expenses.length,
                   );
                 },
