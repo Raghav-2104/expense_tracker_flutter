@@ -27,7 +27,7 @@ class _HomeState extends State<Home> {
         .toList()
         .where((expense) => expense['date'] == selectedDate)
         .toList();
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
@@ -64,10 +64,10 @@ class _HomeState extends State<Home> {
                   });
                   print(selectedDate);
                 }),
+            // Text("data"),
             Expanded(
               // ignore: deprecated_member_use
               child: WatchBoxBuilder(
-                
                 box: _box,
                 builder: (context, box) {
                   List<dynamic> expenses = box.values
@@ -83,7 +83,8 @@ class _HomeState extends State<Home> {
                             IconButton(
                                 onPressed: () {
                                   setState(() {
-                                    db.deleteExpense(index);
+                                    db.deleteExpense(
+                                        expenses[index]['id'], selectedDate);
                                   });
                                 },
                                 icon: Icon(Icons.delete)),
@@ -96,28 +97,27 @@ class _HomeState extends State<Home> {
                             child: ListTile(
                               title: Text(expenses[index]['category'],
                                   style: TextStyle(
-                                    fontSize: 20,
+                                      fontSize: 20,
                                       color: Colors.deepPurple,
-                                      fontWeight: FontWeight.bold
-                                      )
-                                    ),
+                                      fontWeight: FontWeight.bold)),
                               subtitle: Row(
                                 children: [
-                                  Text(expenses[index]['modeOfPayment'],
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                          color: Colors.red[400],
-                                          fontWeight: FontWeight.bold,
-                                      ),
+                                  Text(
+                                    '${expenses[index]['modeOfPayment']}   ${expenses[index]['description']}',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.red[400],
+                                      fontWeight: FontWeight.bold,
                                     ),
+                                  ),
                                 ],
                               ),
-                              trailing: Text(expenses[index]['amount'],
+                              trailing: Text(
+                                '₹ ${expenses[index]['amount']}',
                                 style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black
-                                ),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black),
                               ),
                             ),
                           ),
@@ -129,6 +129,8 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
+            // Text(db.dayTotal(selectedDate).toString()),
+            
           ],
         ),
       ),
