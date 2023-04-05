@@ -24,7 +24,7 @@ class _AddDetailsState extends State<AddDetails> {
     'Medicines',
     'Others'
   ];
-
+  var categoryIndex = 0;
   var description = '';
   var categoryValue = 'Food';
 
@@ -39,12 +39,11 @@ class _AddDetailsState extends State<AddDetails> {
   var day = DateTime.now().day;
   //amount
   var amount = '';
-
   @override
   Widget build(BuildContext context) {
     // db.clearExpense();
     var selectedDate = '$day-$month-$year';
-    // print(date);
+
     return Scaffold(
       backgroundColor: Colors.deepPurple[100],
       appBar: AppBar(
@@ -69,6 +68,7 @@ class _AddDetailsState extends State<AddDetails> {
                     selectedDate = '$day-$month-$year';
                   });
                   print('After change $selectedDate');
+                  print(db.dayTotal(selectedDate));
                 }),
 
             //DropDown for Expense Category
@@ -76,9 +76,13 @@ class _AddDetailsState extends State<AddDetails> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Category',
-                        style: TextStyle(color: Colors.black, fontSize: 20)),
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                        )),
                     DropdownButton(
                       value: categoryValue,
                       items: category.map((String category) {
@@ -90,6 +94,7 @@ class _AddDetailsState extends State<AddDetails> {
                       onChanged: (value) {
                         setState(() {
                           categoryValue = value!;
+                          categoryIndex = category.indexOf(categoryValue);
                           // print(categoryValue);
                         });
                       },
@@ -101,6 +106,8 @@ class _AddDetailsState extends State<AddDetails> {
 
                 //DropDown for Mode of Payment
                 Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Mode of Payment',
                         style: TextStyle(color: Colors.black, fontSize: 20)),
@@ -156,7 +163,6 @@ class _AddDetailsState extends State<AddDetails> {
                       borderRadius: BorderRadius.circular(15)),
                   hintText: 'Description',
                 ),
-                
                 onChanged: (value) {
                   setState(() {
                     description = value;
@@ -175,12 +181,10 @@ class _AddDetailsState extends State<AddDetails> {
                 onPressed: () {
                   //Add to database
                   setState(() {
-                    if(description == '')
-                    {
+                    if (description == '') {
                       description = 'No Description';
                     }
-                    if(amount == '')
-                    {
+                    if (amount == '') {
                       amount = '0.0';
                     }
                     _box.add({
@@ -189,7 +193,8 @@ class _AddDetailsState extends State<AddDetails> {
                       'date': selectedDate.toString(),
                       'amount': amount,
                       'modeOfPayment': modeOfPaymentValue,
-                      'description':description,
+                      'description': description,
+                      'categoryIcon': categoryIndex,
                     });
                     showDialog(
                         context: context,

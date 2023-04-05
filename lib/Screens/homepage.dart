@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:food_icons/food_icons.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -27,7 +28,7 @@ class _HomeState extends State<Home> {
         .toList()
         .where((expense) => expense['date'] == selectedDate)
         .toList();
-
+    // db.clearExpense();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Expense Tracker'),
@@ -63,8 +64,10 @@ class _HomeState extends State<Home> {
                     selectedDate = '$day-$month-$year';
                   });
                   print(selectedDate);
+                  print(db.dayTotal(selectedDate));
                 }),
-            // Text("data"),
+            // Text("Day Total: ${db.dayTotal(selectedDate)}"),
+
             Expanded(
               // ignore: deprecated_member_use
               child: WatchBoxBuilder(
@@ -75,53 +78,66 @@ class _HomeState extends State<Home> {
                       .where((expense) => expense['date'] == selectedDate)
                       .toList();
                   return ListView.builder(
+                    shrinkWrap: true,
                     itemBuilder: (context, index) {
-                      return Slidable(
-                        endActionPane: ActionPane(
-                          motion: const ScrollMotion(),
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  setState(() {
-                                    db.deleteExpense(
-                                        expenses[index]['id'], selectedDate);
-                                  });
-                                },
-                                icon: Icon(Icons.delete)),
-                          ],
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(25, 10, 25, 10),
-                          child: Card(
-                            color: Colors.yellow[100],
-                            child: ListTile(
-                              title: Text(expenses[index]['category'],
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      color: Colors.deepPurple,
-                                      fontWeight: FontWeight.bold)),
-                              subtitle: Row(
-                                children: [
-                                  Text(
-                                    '${expenses[index]['modeOfPayment']}   ${expenses[index]['description']}',
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.red[400],
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                      return Column(
+                        children: [
+                          // Text('Day total: ${db.dayTotal(selectedDate)}'),
+                          Slidable(
+                            endActionPane: ActionPane(
+                              motion: const ScrollMotion(),
+                              children: [
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        db.deleteExpense(expenses[index]['id'],
+                                            selectedDate);
+                                      });
+                                    },
+                                    icon: const Icon(Icons.delete)),
+                              ],
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.fromLTRB(25, 10, 25, 10),
+                              child: Card(
+                                color: Colors.yellow[100],
+                                child: ListTile(
+                                  title: Row(
+                                    children: [
+                                      db.icon[expenses[index]['categoryIcon']],
+                                      SizedBox(width: 10,),
+                                      Text(expenses[index]['category'],
+                                          style: const TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.deepPurple,
+                                              fontWeight: FontWeight.bold)),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              trailing: Text(
-                                '₹ ${expenses[index]['amount']}',
-                                style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.black),
+                                  subtitle: Row(
+                                    children: [
+                                      Text(
+                                        '${expenses[index]['modeOfPayment']}   ${expenses[index]['description']}',
+                                        style: TextStyle(
+                                          fontSize: 16,
+                                          color: Colors.red[400],
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: Text(
+                                    '₹ ${expenses[index]['amount']}',
+                                    style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
+                        ],
                       );
                     },
                     itemCount: expenses.length,
@@ -130,7 +146,6 @@ class _HomeState extends State<Home> {
               ),
             ),
             // Text(db.dayTotal(selectedDate).toString()),
-            
           ],
         ),
       ),
