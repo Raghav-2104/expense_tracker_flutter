@@ -67,8 +67,7 @@ class _AddDetailsState extends State<AddDetails> {
                     day = value.day;
                     selectedDate = '$day-$month-$year';
                   });
-                  print('After change $selectedDate');
-                  print(db.dayTotal(selectedDate));
+                  
                 }),
 
             //DropDown for Expense Category
@@ -216,7 +215,7 @@ class _AddDetailsState extends State<AddDetails> {
                   // print(db.getExpense());
                   // Navigator.pop(context);
                 },
-                child: Text('Add Expense'),
+                child: const Text('Add Expense'),
                 style: ElevatedButton.styleFrom(
                   primary: Colors.deepPurple[400],
                   onPrimary: Colors.white,

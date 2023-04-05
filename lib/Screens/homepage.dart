@@ -2,9 +2,8 @@ import 'package:expense_tracker/Database/Database.dart';
 import 'package:expense_tracker/Screens/AddDetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:food_icons/food_icons.dart';
+
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -38,7 +37,7 @@ class _HomeState extends State<Home> {
               onPressed: () {
                 //Navigate to AddDetail screen
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => AddDetails()));
+                    MaterialPageRoute(builder: (context) => const AddDetails()));
               },
               icon: const Icon(Icons.add))
         ],
@@ -63,30 +62,28 @@ class _HomeState extends State<Home> {
                     selectedDate = '$day-$month-$year';
                   });
                 }),
-            Container(
-              height: 25,
-              child: Expanded(
-                child: ValueListenableBuilder(
-                  valueListenable: _box.listenable(),
-                  builder: (context, index, _) {
-                    return ListView.builder(
-                      itemCount: 1,
-                      itemBuilder: (context, index) {
-                        return Center(
-                            child: Text(
-                          'Day Total = ₹ ${db.dayTotal(selectedDate)}',
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ));
-                      },
-                    );
-                  },
-                ),
+            Expanded(
+              child: ValueListenableBuilder(
+                valueListenable: _box.listenable(),
+                builder: (context, index, _) {
+                  return ListView.builder(
+                    itemCount: 1,
+                    itemBuilder: (context, index) {
+                      return Center(
+                          child: Text(
+                        'Day Total = ₹ ${db.dayTotal(selectedDate)}',
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ));
+                    },
+                  );
+                },
               ),
             ),
             Expanded(
+              flex: 15,
               // ignore: deprecated_member_use
               child: WatchBoxBuilder(
                 box: _box,
@@ -125,7 +122,7 @@ class _HomeState extends State<Home> {
                                   title: Row(
                                     children: [
                                       db.icon[expenses[index]['categoryIcon']],
-                                      SizedBox(
+                                      const SizedBox(
                                         width: 10,
                                       ),
                                       Text(expenses[index]['category'],
