@@ -77,9 +77,10 @@ class Database {
 
   double dayTotal(var date) {
     double total = 0;
+    print(_box.getAt(0)['amount']);
     for (int i = 0; i < _box.length; i++) {
-      // if (expense[i]['date'] == date)
-      //   total += int.parse(_box.getAt(i)['amount']);
+      if (_box.getAt(i)['date'] == date)
+        total += int.parse(_box.getAt(i)['amount']);
       print(int.parse(_box.getAt(i)['amount']));
       print('In Loop');
     }

@@ -28,6 +28,7 @@ class _HomeState extends State<Home> {
         .toList()
         .where((expense) => expense['date'] == selectedDate)
         .toList();
+    // var selected = DateTime.now().day.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().year.toString();
     // db.clearExpense();
     return Scaffold(
       appBar: AppBar(
@@ -63,11 +64,27 @@ class _HomeState extends State<Home> {
                     day = value.day.toString();
                     selectedDate = '$day-$month-$year';
                   });
-                  print(selectedDate);
-                  print(db.dayTotal(selectedDate));
+                  // print(selectedDate);
+                  // print(db.dayTotal(selectedDate));
                 }),
             // Text("Day Total: ${db.dayTotal(selectedDate)}"),
-
+            Expanded(
+              child: ValueListenableBuilder(
+                valueListenable: _box.listenable(),
+                builder: (context, index, _) {
+                  return ListView.builder(
+                    itemCount: 1,
+                    itemBuilder: (context, index) {
+                      return Card(
+                        child: ListTile(
+                          title: Text('Day Total=${db.dayTotal(selectedDate)}'),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
             Expanded(
               // ignore: deprecated_member_use
               child: WatchBoxBuilder(
@@ -106,7 +123,9 @@ class _HomeState extends State<Home> {
                                   title: Row(
                                     children: [
                                       db.icon[expenses[index]['categoryIcon']],
-                                      SizedBox(width: 10,),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
                                       Text(expenses[index]['category'],
                                           style: const TextStyle(
                                               fontSize: 20,
