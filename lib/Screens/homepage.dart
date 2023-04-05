@@ -21,14 +21,12 @@ class _HomeState extends State<Home> {
   var year = '';
   var month = '';
   var day = '';
-
   @override
   Widget build(BuildContext context) {
     List<dynamic> expenses = _box.values
         .toList()
         .where((expense) => expense['date'] == selectedDate)
         .toList();
-    // var selected = DateTime.now().day.toString()+'-'+DateTime.now().month.toString()+'-'+DateTime.now().year.toString();
     // db.clearExpense();
     return Scaffold(
       appBar: AppBar(
@@ -64,25 +62,28 @@ class _HomeState extends State<Home> {
                     day = value.day.toString();
                     selectedDate = '$day-$month-$year';
                   });
-                  // print(selectedDate);
-                  // print(db.dayTotal(selectedDate));
                 }),
-            // Text("Day Total: ${db.dayTotal(selectedDate)}"),
-            Expanded(
-              child: ValueListenableBuilder(
-                valueListenable: _box.listenable(),
-                builder: (context, index, _) {
-                  return ListView.builder(
-                    itemCount: 1,
-                    itemBuilder: (context, index) {
-                      return Card(
-                        child: ListTile(
-                          title: Text('Day Total=${db.dayTotal(selectedDate)}'),
-                        ),
-                      );
-                    },
-                  );
-                },
+            Container(
+              height: 25,
+              child: Expanded(
+                child: ValueListenableBuilder(
+                  valueListenable: _box.listenable(),
+                  builder: (context, index, _) {
+                    return ListView.builder(
+                      itemCount: 1,
+                      itemBuilder: (context, index) {
+                        return Center(
+                            child: Text(
+                          'Day Total = ₹ ${db.dayTotal(selectedDate)}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ));
+                      },
+                    );
+                  },
+                ),
               ),
             ),
             Expanded(
@@ -105,18 +106,19 @@ class _HomeState extends State<Home> {
                               motion: const ScrollMotion(),
                               children: [
                                 IconButton(
-                                    onPressed: () {
-                                      setState(() {
-                                        db.deleteExpense(expenses[index]['id'],
-                                            selectedDate);
-                                      });
-                                    },
-                                    icon: const Icon(Icons.delete)),
+                                  onPressed: () {
+                                    setState(() {
+                                      db.deleteExpense(
+                                          expenses[index]['id'], selectedDate);
+                                    });
+                                  },
+                                  icon: const Icon(Icons.delete),
+                                  color: Colors.red,
+                                ),
                               ],
                             ),
                             child: Padding(
-                              padding:
-                                  const EdgeInsets.fromLTRB(25, 10, 25, 10),
+                              padding: const EdgeInsets.fromLTRB(25, 5, 25, 10),
                               child: Card(
                                 color: Colors.yellow[100],
                                 child: ListTile(
@@ -164,7 +166,6 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-            // Text(db.dayTotal(selectedDate).toString()),
           ],
         ),
       ),

@@ -76,6 +76,9 @@ class Database {
   //get total expense for a day
 
   double dayTotal(var date) {
+    if (_box.isEmpty) {
+      return 0.0;
+    }
     double total = 0;
     print(_box.getAt(0)['amount']);
     for (int i = 0; i < _box.length; i++) {
